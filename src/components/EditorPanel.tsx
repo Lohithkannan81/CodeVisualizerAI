@@ -8,8 +8,8 @@ export function EditorPanel() {
     const setCode = useExecutionStore((state) => state.setCode);
     const language = useExecutionStore((state) => state.language);
     const setLanguage = useExecutionStore((state) => state.setLanguage);
-    const steps = useExecutionStore((state) => state.steps);
-    const currentStepIndex = useExecutionStore((state) => state.currentStepIndex);
+    const steps = useExecutionStore((state) => state.executionSteps);
+    const currentStepIndex = useExecutionStore((state) => state.currentStep);
     const runCode = useExecutionStore((state) => state.runCode);
     const isCompiling = useExecutionStore((state) => state.isCompiling);
 
@@ -25,7 +25,7 @@ export function EditorPanel() {
         if (!monaco || !editorRef.current || steps.length === 0) return;
 
         const step = steps[currentStepIndex];
-        const line = step?.lineIndex || 1;
+        const line = step?.line || 1;
 
         if (decorationsRef.current) {
             decorationsRef.current.clear();
@@ -46,6 +46,8 @@ export function EditorPanel() {
 
     }, [currentStepIndex, steps, monaco]);
 
+
+
     return (
         <div className="flex-1 relative bg-[#1e1e1e] border-t border-b border-white/5 flex flex-col">
             <div className="h-12 border-b border-white/5 flex items-center px-4 justify-between bg-black/20 shrink-0">
@@ -65,12 +67,16 @@ export function EditorPanel() {
                 </div>
 
                 <button
-                    onClick={runCode}
+                    id="run-code-btn"
+                    onClick={() => void runCode()}
                     disabled={isCompiling}
-                    className="flex items-center gap-2 px-4 py-1.5 bg-neon-blue/20 hover:bg-neon-blue/30 text-neon-blue rounded text-xs font-mono font-bold transition-colors disabled:opacity-50"
+                    className={`flex items-center gap-2 px-4 py-1.5 rounded text-xs font-mono font-bold transition-all ${isCompiling
+                            ? 'bg-neon-blue/10 text-neon-blue/60 animate-pulse cursor-not-allowed'
+                            : 'bg-neon-blue/20 hover:bg-neon-blue/40 text-neon-blue hover:shadow-[0_0_12px_rgba(0,243,255,0.4)]'
+                        }`}
                 >
-                    <Play className="w-3.5 h-3.5" />
-                    {isCompiling ? 'RUNNING...' : 'RUN CODE'}
+                    <Play className={`w-3.5 h-3.5 ${isCompiling ? 'animate-spin' : ''}`} />
+                    {isCompiling ? 'RUNNING…' : 'RUN CODE'}
                 </button>
             </div>
             <div className="flex-1 relative py-2 editor-container">

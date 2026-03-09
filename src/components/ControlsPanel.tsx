@@ -5,8 +5,8 @@ export function ControlsPanel() {
     const isPlaying = useExecutionStore((state) => state.isPlaying);
     const play = useExecutionStore((state) => state.play);
     const pause = useExecutionStore((state) => state.pause);
-    const stepForward = useExecutionStore((state) => state.stepForward);
-    const stepBack = useExecutionStore((state) => state.stepBack);
+    const nextStep = useExecutionStore((state) => state.nextStep);
+    const previousStep = useExecutionStore((state) => state.previousStep);
     const reset = useExecutionStore((state) => state.reset);
     const setSpeed = useExecutionStore((state) => state.setSpeed);
     const playSpeed = useExecutionStore((state) => state.playSpeed);
@@ -14,8 +14,8 @@ export function ControlsPanel() {
     const toggleAlgorithmMode = useExecutionStore((state) => state.toggleAlgorithmMode);
 
     // Timeline variables
-    const currentStepIndex = useExecutionStore((state) => state.currentStepIndex);
-    const steps = useExecutionStore((state) => state.steps);
+    const currentStepIndex = useExecutionStore((state) => state.currentStep);
+    const steps = useExecutionStore((state) => state.executionSteps);
     const setStep = useExecutionStore((state) => state.setStep);
     const totalSteps = Math.max(0, steps.length - 1);
 
@@ -48,13 +48,15 @@ export function ControlsPanel() {
 
                     <div className="flex items-center gap-2 border border-white/10 rounded-full px-2 py-1 bg-black/50">
                         <button
-                            title="Step Back"
-                            onClick={stepBack}
+                            id="step-back-btn"
+                            title="Previous Step"
+                            onClick={previousStep}
                             className="p-1.5 rounded-full hover:bg-white/10 transition-colors text-gray-300"
                         >
                             <StepBack className="w-4 h-4" />
                         </button>
                         <button
+                            id="play-pause-btn"
                             title="Play/Pause"
                             onClick={isPlaying ? pause : play}
                             className="p-2.5 rounded-full bg-neon-blue/20 hover:bg-neon-blue/30 text-neon-blue transition-colors shadow-[0_0_15px_rgba(0,243,255,0.2)]"
@@ -62,8 +64,9 @@ export function ControlsPanel() {
                             {isPlaying ? <Pause className="w-5 h-5 ml-0.5" /> : <Play className="w-5 h-5 ml-0.5" />}
                         </button>
                         <button
-                            title="Step Forward"
-                            onClick={stepForward}
+                            id="step-forward-btn"
+                            title="Next Step"
+                            onClick={nextStep}
                             className="p-1.5 rounded-full hover:bg-white/10 transition-colors text-gray-300"
                         >
                             <StepForward className="w-4 h-4" />
